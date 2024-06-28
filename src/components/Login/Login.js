@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useContext } from "react";
+import React, { useState, useReducer, useContext, useRef, useEffect } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
@@ -26,6 +26,11 @@ const passwordReducer = (state, action) => {
 };
 
 const Login = () => {
+  const emailRef = useRef(0);
+  useEffect(()=>{
+    emailRef.current.focus();
+
+  },[])
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
@@ -38,7 +43,7 @@ const Login = () => {
     isValid: null,
   });
 
-   const Authctx=useContext(AuthContext)
+  const Authctx = useContext(AuthContext);
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", payload: event.target.value });
 
@@ -50,9 +55,7 @@ const Login = () => {
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: "USER_INPUT", payload: event.target.value });
 
-    setFormIsValid(
-      emailState.isValid && event.target.value.length > 6
-    );
+    setFormIsValid(emailState.isValid && event.target.value.length > 6);
   };
 
   const validateEmailHandler = () => {
@@ -79,6 +82,7 @@ const Login = () => {
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
+            ref={emailRef}
             id="email"
             value={emailState.value}
             onChange={emailChangeHandler}
